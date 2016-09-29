@@ -28,6 +28,9 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Helloworld;
@@ -41,7 +44,68 @@ namespace GreeterServer
         {
             return Task.FromResult(new HelloReply { Message = "Hello " + request.Name });
         }
+
+        public override async Task SayHelloServerStream(HelloRequest request,
+                                                  IServerStreamWriter<HelloReply> responseStream,
+                                                  ServerCallContext context)
+        {
+            foreach (var p in Enumerable.Range(0,
+                                               10))
+            {
+                await responseStream.WriteAsync(new HelloReply
+                                          {
+                                              Message =
+                                                  "Hello " + request.Name +
+                                                  p
+                                          });
+            }
+        }
+
+        public override async Task<HelloReply> SayHelloClientStream(IAsyncStreamReader<HelloRequest> requestStream,
+                                                                    ServerCallContext context)
+        {
+            var builder = new StringBuilder();
+
+            while (await requestStream.MoveNext())
+            {
+                var current = requestStream.Current;
+                builder.AppendLine("Hello " + current.Name);
+            }
+
+            return new HelloReply { Message = builder.ToString() };
+        }
+
+        public override async Task SayHelloBiDirectionalStream(IAsyncStreamReader<HelloRequest> requestStream,
+                                                               IServerStreamWriter<HelloReply> responseStream,
+                                                               ServerCallContext context)
+        {
+            while (await requestStream.MoveNext())
+            {
+                var current = requestStream.Current;
+
+                await responseStream.WriteAsync(new HelloReply
+                                                {
+                                                    Message =
+                                                        "Hello " + current.Name
+                                                });
+            }
+        }
     }
+
+    /*
+     * TODO:
+     * 1. Add non-breaking change
+     * 2. Add breaking change
+     * 3. Expose service / access service in JavaScript / Go
+     * 4. Mismatch detection
+     * 5. Performance comparison (serialization / deserialization)
+     * 6. Types allowed in Protobuf
+     * 7. Compare load size in JSON (RESTful) & gRPC (Protobuf)
+     * 8. Error handling (broken connection handling)
+     * 9. Connection pooling
+     * 10. Compare with Finagle, Avro, Thrift, anything else?
+     * 11. Who uses & what scale?
+     */
 
     class Program
     {

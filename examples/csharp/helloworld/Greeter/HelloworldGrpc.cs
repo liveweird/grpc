@@ -39,7 +39,7 @@ using Grpc.Core;
 
 namespace Helloworld {
   /// <summary>
-  ///  The greeting service definition.
+  ///  Sends a greeting
   /// </summary>
   public static class Greeter
   {
@@ -55,6 +55,27 @@ namespace Helloworld {
         __Marshaller_HelloRequest,
         __Marshaller_HelloReply);
 
+    static readonly Method<global::Helloworld.HelloRequest, global::Helloworld.HelloReply> __Method_SayHelloServerStream = new Method<global::Helloworld.HelloRequest, global::Helloworld.HelloReply>(
+        MethodType.ServerStreaming,
+        __ServiceName,
+        "SayHelloServerStream",
+        __Marshaller_HelloRequest,
+        __Marshaller_HelloReply);
+
+    static readonly Method<global::Helloworld.HelloRequest, global::Helloworld.HelloReply> __Method_SayHelloClientStream = new Method<global::Helloworld.HelloRequest, global::Helloworld.HelloReply>(
+        MethodType.ClientStreaming,
+        __ServiceName,
+        "SayHelloClientStream",
+        __Marshaller_HelloRequest,
+        __Marshaller_HelloReply);
+
+    static readonly Method<global::Helloworld.HelloRequest, global::Helloworld.HelloReply> __Method_SayHelloBiDirectionalStream = new Method<global::Helloworld.HelloRequest, global::Helloworld.HelloReply>(
+        MethodType.DuplexStreaming,
+        __ServiceName,
+        "SayHelloBiDirectionalStream",
+        __Marshaller_HelloRequest,
+        __Marshaller_HelloReply);
+
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
     {
@@ -64,10 +85,22 @@ namespace Helloworld {
     /// <summary>Base class for server-side implementations of Greeter</summary>
     public abstract class GreeterBase
     {
-      /// <summary>
-      ///  Sends a greeting
-      /// </summary>
       public virtual global::System.Threading.Tasks.Task<global::Helloworld.HelloReply> SayHello(global::Helloworld.HelloRequest request, ServerCallContext context)
+      {
+        throw new RpcException(new Status(StatusCode.Unimplemented, ""));
+      }
+
+      public virtual global::System.Threading.Tasks.Task SayHelloServerStream(global::Helloworld.HelloRequest request, IServerStreamWriter<global::Helloworld.HelloReply> responseStream, ServerCallContext context)
+      {
+        throw new RpcException(new Status(StatusCode.Unimplemented, ""));
+      }
+
+      public virtual global::System.Threading.Tasks.Task<global::Helloworld.HelloReply> SayHelloClientStream(IAsyncStreamReader<global::Helloworld.HelloRequest> requestStream, ServerCallContext context)
+      {
+        throw new RpcException(new Status(StatusCode.Unimplemented, ""));
+      }
+
+      public virtual global::System.Threading.Tasks.Task SayHelloBiDirectionalStream(IAsyncStreamReader<global::Helloworld.HelloRequest> requestStream, IServerStreamWriter<global::Helloworld.HelloReply> responseStream, ServerCallContext context)
       {
         throw new RpcException(new Status(StatusCode.Unimplemented, ""));
       }
@@ -97,33 +130,45 @@ namespace Helloworld {
       {
       }
 
-      /// <summary>
-      ///  Sends a greeting
-      /// </summary>
       public virtual global::Helloworld.HelloReply SayHello(global::Helloworld.HelloRequest request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
       {
         return SayHello(request, new CallOptions(headers, deadline, cancellationToken));
       }
-      /// <summary>
-      ///  Sends a greeting
-      /// </summary>
       public virtual global::Helloworld.HelloReply SayHello(global::Helloworld.HelloRequest request, CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_SayHello, null, options, request);
       }
-      /// <summary>
-      ///  Sends a greeting
-      /// </summary>
       public virtual AsyncUnaryCall<global::Helloworld.HelloReply> SayHelloAsync(global::Helloworld.HelloRequest request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
       {
         return SayHelloAsync(request, new CallOptions(headers, deadline, cancellationToken));
       }
-      /// <summary>
-      ///  Sends a greeting
-      /// </summary>
       public virtual AsyncUnaryCall<global::Helloworld.HelloReply> SayHelloAsync(global::Helloworld.HelloRequest request, CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_SayHello, null, options, request);
+      }
+      public virtual AsyncServerStreamingCall<global::Helloworld.HelloReply> SayHelloServerStream(global::Helloworld.HelloRequest request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return SayHelloServerStream(request, new CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual AsyncServerStreamingCall<global::Helloworld.HelloReply> SayHelloServerStream(global::Helloworld.HelloRequest request, CallOptions options)
+      {
+        return CallInvoker.AsyncServerStreamingCall(__Method_SayHelloServerStream, null, options, request);
+      }
+      public virtual AsyncClientStreamingCall<global::Helloworld.HelloRequest, global::Helloworld.HelloReply> SayHelloClientStream(Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return SayHelloClientStream(new CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual AsyncClientStreamingCall<global::Helloworld.HelloRequest, global::Helloworld.HelloReply> SayHelloClientStream(CallOptions options)
+      {
+        return CallInvoker.AsyncClientStreamingCall(__Method_SayHelloClientStream, null, options);
+      }
+      public virtual AsyncDuplexStreamingCall<global::Helloworld.HelloRequest, global::Helloworld.HelloReply> SayHelloBiDirectionalStream(Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return SayHelloBiDirectionalStream(new CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual AsyncDuplexStreamingCall<global::Helloworld.HelloRequest, global::Helloworld.HelloReply> SayHelloBiDirectionalStream(CallOptions options)
+      {
+        return CallInvoker.AsyncDuplexStreamingCall(__Method_SayHelloBiDirectionalStream, null, options);
       }
       protected override GreeterClient NewInstance(ClientBaseConfiguration configuration)
       {
@@ -135,7 +180,10 @@ namespace Helloworld {
     public static ServerServiceDefinition BindService(GreeterBase serviceImpl)
     {
       return ServerServiceDefinition.CreateBuilder()
-          .AddMethod(__Method_SayHello, serviceImpl.SayHello).Build();
+          .AddMethod(__Method_SayHello, serviceImpl.SayHello)
+          .AddMethod(__Method_SayHelloServerStream, serviceImpl.SayHelloServerStream)
+          .AddMethod(__Method_SayHelloClientStream, serviceImpl.SayHelloClientStream)
+          .AddMethod(__Method_SayHelloBiDirectionalStream, serviceImpl.SayHelloBiDirectionalStream).Build();
     }
 
   }

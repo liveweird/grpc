@@ -28,6 +28,8 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Grpc.Core;
 using Helloworld;
 
@@ -37,13 +39,71 @@ namespace GreeterClient
     {
         public static void Main(string[] args)
         {
-            Channel channel = new Channel("127.0.0.1:50051", ChannelCredentials.Insecure);
+            var channel = new Channel("127.0.0.1:50051", ChannelCredentials.Insecure);
 
             var client = new Greeter.GreeterClient(channel);
-            String user = "you";
 
-            var reply = client.SayHello(new HelloRequest { Name = user });
+            var reply = client.SayHello(new HelloRequest { Name = "you" });
             Console.WriteLine("Greeting: " + reply.Message);
+
+            var replyAsync = client.SayHelloAsync(new HelloRequest
+                                                        {
+                                                            Name = "you"
+                                                        });
+
+            Console.WriteLine("Greeting (async): " + replyAsync.ResponseAsync.Result.Message);
+
+            using (var call = client.SayHelloServerStream(new HelloRequest
+                                                          {
+                                                              Name = "you"
+                                                          }))
+            {
+                while (call.ResponseStream.MoveNext().Result)
+                {
+                    Console.WriteLine("Greeting (streamed on server): " + call.ResponseStream.Current);
+                }
+            }
+
+            using (var call = client.SayHelloClientStream())
+            {
+                Enumerable.Range(0,
+                                 10)
+                          .ToList()
+                          .ForEach(p =>
+                                   {
+                                       call.RequestStream.WriteAsync(new HelloRequest
+                                       {
+                                           Name = "you" + p
+                                       }).Wait();
+                                   });
+
+                call.RequestStream.CompleteAsync().Wait();
+                var response = call.ResponseAsync.Result;
+
+                Console.WriteLine("Greeting (streamed on a client): " + response);
+            }
+
+
+            using (var call = client.SayHelloBiDirectionalStream())
+            {
+                Enumerable.Range(0,
+                                 10)
+                          .ToList()
+                          .ForEach(p =>
+                          {
+                              call.RequestStream.WriteAsync(new HelloRequest
+                              {
+                                  Name = "you" + p
+                              }).Wait();
+                          });
+
+                call.RequestStream.CompleteAsync().Wait();
+
+                while (call.ResponseStream.MoveNext().Result)
+                {
+                    Console.WriteLine("Greeting (streamed bi-directionally): " + call.ResponseStream.Current);
+                }
+            }
 
             channel.ShutdownAsync().Wait();
             Console.WriteLine("Press any key to exit...");
