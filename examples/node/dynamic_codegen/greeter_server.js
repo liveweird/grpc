@@ -43,13 +43,20 @@ function sayHello(call, callback) {
   callback(null, {message: 'Hello ' + call.request.name});
 }
 
+function sayHelloServerStream(call) {
+  for (i in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
+    call.write({message: 'Hello ' + call.request.name + i})
+  }
+  call.end();
+}
+
 /**
  * Starts an RPC server that receives requests for the Greeter service at the
  * sample server port
  */
 function main() {
   var server = new grpc.Server();
-  server.addProtoService(hello_proto.Greeter.service, {sayHello: sayHello});
+  server.addProtoService(hello_proto.Greeter.service, {sayHello: sayHello, sayHelloServerStream: sayHelloServerStream});
   server.bind('0.0.0.0:50051', grpc.ServerCredentials.createInsecure());
   server.start();
 }

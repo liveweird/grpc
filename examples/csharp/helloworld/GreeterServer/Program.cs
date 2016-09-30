@@ -105,6 +105,9 @@ namespace GreeterServer
      * 9. Connection pooling
      * 10. Compare with Finagle, Avro, Thrift, anything else?
      * 11. Who uses & what scale?
+     * 12. https://github.com/grpc-ecosystem/polyglot
+     * 13. https://github.com/grpc-ecosystem/grpc-gateway
+     * 14. Add security
      */
 
     class Program

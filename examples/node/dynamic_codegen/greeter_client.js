@@ -45,8 +45,14 @@ function main() {
   } else {
     user = 'world';
   }
+
   client.sayHello({name: user}, function(err, response) {
     console.log('Greeting:', response.message);
+  });
+
+  var serverStreamCall = client.sayHelloServerStream({name: user});
+  serverStreamCall.on('data', function(message) {
+    console.log('Greeting (server-streamed):', message.message);
   });
 }
 
