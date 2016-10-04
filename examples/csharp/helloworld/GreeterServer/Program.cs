@@ -96,8 +96,6 @@ namespace GreeterServer
      * TODO:
      * 1. Add non-breaking change
      * 2. Add breaking change
-     * 3b. Client-side streaming for Node
-     * 3c. Bi-directional streaming for Node
      * 3d. Basic & async service for Go
      * 3e. Server-side streaming for Go
      * 3f. Client-side streaming for Go

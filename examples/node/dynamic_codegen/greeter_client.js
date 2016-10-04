@@ -66,6 +66,18 @@ function main() {
     clientClientCall.write({name: (user + i)})
   }
   clientClientCall.end();
+
+  console.log('Trying bi-directional streaming');
+  var biDirectionalStreamCall = client.sayHelloBiDirectionalStream();
+
+  biDirectionalStreamCall.on('data', function(message) {
+    console.log('Greeting (bi-directional-streamed):', message.message);
+  });
+
+  for (i in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
+    biDirectionalStreamCall.write({name: (user + i)})
+  }
+  biDirectionalStreamCall.end();
 }
 
 main();

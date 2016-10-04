@@ -62,13 +62,28 @@ function sayHelloClientStream(call, callback) {
   });
 }
 
+function sayHelloBiDirectionalStream(call) {
+  call.on('data', function(message) {
+    call.write({message: 'Hello ' + message.name})
+  });
+
+  call.on('end', function() {
+    call.end();
+  });
+}
+
 /**
  * Starts an RPC server that receives requests for the Greeter service at the
  * sample server port
  */
 function main() {
   var server = new grpc.Server();
-  server.addProtoService(hello_proto.Greeter.service, {sayHello: sayHello, sayHelloServerStream: sayHelloServerStream, sayHelloClientStream: sayHelloClientStream});
+  server.addProtoService(hello_proto.Greeter.service, {
+    sayHello: sayHello,
+    sayHelloServerStream: sayHelloServerStream,
+    sayHelloClientStream: sayHelloClientStream,
+    sayHelloBiDirectionalStream: sayHelloBiDirectionalStream
+  });
   server.bind('0.0.0.0:50051', grpc.ServerCredentials.createInsecure());
   server.start();
 }
