@@ -37,6 +37,32 @@ namespace GreeterClient
 {
     class Program
     {
+        public static void Main2(string[] args)
+        {
+            var channel = new Channel("127.0.0.1:50051", ChannelCredentials.Insecure);
+            var client = new Greeter.GreeterClient(channel);
+
+            while (!Console.KeyAvailable)
+            {
+                try
+                {
+                    var reply = client.SayHello(new HelloRequest
+                                                {
+                                                    Name = "you"
+                                                });
+                    Console.WriteLine("Greeting: " + reply.Message);
+                }
+                catch (RpcException kaboom)
+                {
+                    Console.WriteLine(kaboom.ToString());
+                }
+
+                System.Threading.Thread.Sleep(TimeSpan.FromSeconds(1));
+            }
+
+            channel.ShutdownAsync().Wait();
+        }
+
         public static void Main(string[] args)
         {
             var channel = new Channel("127.0.0.1:50051", ChannelCredentials.Insecure);

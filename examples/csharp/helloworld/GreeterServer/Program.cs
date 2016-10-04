@@ -96,16 +96,13 @@ namespace GreeterServer
      * TODO:
      * 1. Add non-breaking change
      * 2. Add breaking change
-     * 3d. Basic & async service for Go
-     * 3e. Server-side streaming for Go
-     * 3f. Client-side streaming for Go
-     * 3g. Bi-directional streaming for Go
+     * _X_ 3. Check interoperability between various technologies
      * 4. Mismatch detection
      * 5. Performance comparison (serialization / deserialization)
      * 6. Types allowed in Protobuf
      * 7. Compare load size in JSON (RESTful) & gRPC (Protobuf)
-     * 8. Error handling (broken connection handling)
-     * 9. Connection pooling
+     * _X_ 8. Error handling (broken connection handling)
+     * _X_ 9. Connection pooling & load balancing
      * 10. Compare with Finagle, Avro, Thrift, anything else?
      * 11. Who uses & what scale?
      * 12. https://github.com/grpc-ecosystem/polyglot
