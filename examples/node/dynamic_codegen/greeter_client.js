@@ -46,14 +46,26 @@ function main() {
     user = 'world';
   }
 
+  console.log('Trying basic, async message');
   client.sayHello({name: user}, function(err, response) {
     console.log('Greeting:', response.message);
   });
 
+  console.log('Trying server-streamed messaging');
   var serverStreamCall = client.sayHelloServerStream({name: user});
   serverStreamCall.on('data', function(message) {
     console.log('Greeting (server-streamed):', message.message);
   });
+
+  console.log('Trying client-streamed messaging');
+  var clientClientCall = client.sayHelloClientStream(function(err, response) {
+    console.log('Greeting (client-streamed):', response.message);
+  });
+
+  for (i in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
+    clientClientCall.write({name: (user + i)})
+  }
+  clientClientCall.end();
 }
 
 main();

@@ -96,7 +96,12 @@ namespace GreeterServer
      * TODO:
      * 1. Add non-breaking change
      * 2. Add breaking change
-     * 3. Expose service / access service in JavaScript / Go
+     * 3b. Client-side streaming for Node
+     * 3c. Bi-directional streaming for Node
+     * 3d. Basic & async service for Go
+     * 3e. Server-side streaming for Go
+     * 3f. Client-side streaming for Go
+     * 3g. Bi-directional streaming for Go
      * 4. Mismatch detection
      * 5. Performance comparison (serialization / deserialization)
      * 6. Types allowed in Protobuf
