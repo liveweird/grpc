@@ -98,12 +98,12 @@ namespace GreeterServer
      * 2. Add breaking change
      * _X_ 3. Check interoperability between various technologies
      * 4. Mismatch detection
-     * 5. Performance comparison (serialization / deserialization)
+     * 5. Performance comparison (serialization / deserialization) - https://performance-dot-grpc-testing.appspot.com/
      * 6. Types allowed in Protobuf
      * 7. Compare load size in JSON (RESTful) & gRPC (Protobuf)
-     * _X_ 8. Error handling (broken connection handling)
+     * _X_ 8. Error handling (broken connection handling) - internal health check
      * _X_ 9. Connection pooling & load balancing
-     * 10. Compare with Finagle, Avro, Thrift, anything else?
+     * 10. Compare with Finagle, Avro, Thrift, anything else? ZeroMQ
      * 11. Who uses & what scale?
      * 12. https://github.com/grpc-ecosystem/polyglot
      * 13. https://github.com/grpc-ecosystem/grpc-gateway
